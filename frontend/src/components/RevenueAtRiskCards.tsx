@@ -547,7 +547,7 @@ export default function RevenueAtRiskCards(): JSX.Element {
   // Maintenance banner shows if any asset is in maintenance OR the demo
   // toggle is flipped.
   const maintCount = data?.totals.inMaintenance ?? 0;
-  const showMaintBanner = maintenanceActive || maintCount > 0;
+  const showMaintBanner = maintenanceActive;
   const allSuppressed =
     !!data && data.totals.count > 0 && data.totals.inMaintenance === data.totals.count;
 
