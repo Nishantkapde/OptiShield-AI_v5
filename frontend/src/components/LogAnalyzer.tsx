@@ -81,9 +81,7 @@ export const LogAnalyzer: React.FC = () => {
         />
 
         <div className="flex items-center justify-between">
-          <p className="text-[11px] text-slate-500 font-mono">
-            Backend Target: <code className="text-slate-400">http://localhost:5001</code>
-          </p>
+          <div />
           <button
             onClick={handleAnalyze}
             disabled={loading || !rawLog.trim()}
