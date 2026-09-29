@@ -12,7 +12,10 @@ export interface AnalyzeLogResponse {
   aiAnalysis: string;
 }
 
-const API_BASE_URL = 'http://localhost:5001/api';
+// Dynamically use the Vercel environment variable in production, fallback to localhost for local testing
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL 
+  ? `${import.meta.env.VITE_API_BASE_URL}/api` 
+  : 'http://localhost:5001/api';
 
 export const analyzeLogTelemetry = async (rawLog: string): Promise<AnalyzeLogResponse> => {
   const response = await fetch(`${API_BASE_URL}/privacy/analyze-log`, {
