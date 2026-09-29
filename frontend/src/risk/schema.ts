@@ -308,6 +308,7 @@ export const FRAMEWORK_LABELS: Record<FrameworkType, string> = {
 
 /** Board appetite status threshold — 80% of limit → warning. */
 export const APPETITE_WARNING_PCT = 0.8;
+
 // ════════════════════════════════════════════════════════════
 // [PP7] SUPPLY CHAIN DEPENDENCY GRAPH
 // ════════════════════════════════════════════════════════════
@@ -355,6 +356,7 @@ export const CRITICAL_VENDOR_EPSS_THRESHOLD = 0.28;
 export const SPOF_COUPLING_THRESHOLD = 0.9;
 /** Minimum outgoing edges for a vendor to qualify as SPOF */
 export const SPOF_MIN_OUTGOING_EDGES = 2;
+
 // ════════════════════════════════════════════════════════════
 // [PP8] REMEDIATION PLAYBOOKS
 // ════════════════════════════════════════════════════════════
@@ -395,6 +397,7 @@ export const ENGINEERING_HOURLY_RATE = 50;
 
 /** Base per-signal dollar value used to scale ΔEAL by severity. */
 export const BASE_EAL_PER_SIGNAL = 180_000;
+
 // ════════════════════════════════════════════════════════════
 // [PP9] EXECUTIVE DASHBOARD — HEATMAP + FILTERS
 // ════════════════════════════════════════════════════════════
@@ -431,47 +434,52 @@ export const DashboardFilterSchema = z.object({
 });
 export type DashboardFilter = z.infer<typeof DashboardFilterSchema>;
 
-/** Display labels + colors per tier */
+// ============================================================
+// [FIX] Redesigned tier palette — 5 clearly distinct hues.
+//       teal → emerald → amber → orange → red.
+//       Higher opacity so colors read clearly on slate-950.
+// ============================================================
 export const HEATMAP_TIER_VISUALS: Record<
   HeatmapTier,
   { label: string; bg: string; border: string; text: string; glow: string }
 > = {
   VERY_LOW: {
     label: 'Very Low',
-    bg: 'bg-emerald-500/20',
-    border: 'border-emerald-500/40',
-    text: 'text-emerald-300',
-    glow: 'hover:shadow-emerald-500/20',
+    bg: 'bg-teal-500/30',
+    border: 'border-teal-400/60',
+    text: 'text-teal-100',
+    glow: 'hover:shadow-teal-500/40',
   },
   LOW: {
     label: 'Low',
-    bg: 'bg-yellow-500/20',
-    border: 'border-yellow-500/40',
-    text: 'text-yellow-300',
-    glow: 'hover:shadow-yellow-500/20',
+    bg: 'bg-emerald-500/35',
+    border: 'border-emerald-400/60',
+    text: 'text-emerald-50',
+    glow: 'hover:shadow-emerald-500/40',
   },
   MEDIUM: {
     label: 'Medium',
-    bg: 'bg-orange-500/25',
-    border: 'border-orange-500/40',
-    text: 'text-orange-300',
-    glow: 'hover:shadow-orange-500/20',
+    bg: 'bg-amber-400/40',
+    border: 'border-amber-300/70',
+    text: 'text-amber-50',
+    glow: 'hover:shadow-amber-400/40',
   },
   HIGH: {
     label: 'High',
-    bg: 'bg-rose-500/30',
-    border: 'border-rose-500/40',
-    text: 'text-rose-300',
-    glow: 'hover:shadow-rose-500/20',
+    bg: 'bg-orange-500/50',
+    border: 'border-orange-400/70',
+    text: 'text-orange-50',
+    glow: 'hover:shadow-orange-500/50',
   },
   CRITICAL: {
     label: 'Critical',
-    bg: 'bg-rose-700/50',
-    border: 'border-rose-600/60',
-    text: 'text-rose-100',
-    glow: 'hover:shadow-rose-700/30',
+    bg: 'bg-red-500/65',
+    border: 'border-red-400/80',
+    text: 'text-white',
+    glow: 'hover:shadow-red-500/60',
   },
 };
+
 // ════════════════════════════════════════════════════════════
 // [PP10] PERSISTENCE + AUDIT + REPORT EXPORT
 // ════════════════════════════════════════════════════════════

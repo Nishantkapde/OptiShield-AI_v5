@@ -14,7 +14,6 @@ import {
   TrendingUp,
   Brain,
   ShieldCheck,
-  Menu,
   Bell,
   Settings,
   ChevronDown,
@@ -24,7 +23,9 @@ import {
   FileCheck, // [PP10] audit button icon
 } from 'lucide-react';
 
-import { Sidebar } from './components/Sidebar';
+// [LANDING] Marketing landing page — shown before the dashboard
+import LandingPage from './pages/LandingPage';
+
 import RevenueAtRiskCards from './components/RevenueAtRiskCards';
 import ExposureFunnel from './components/ExposureFunnel';
 import TelemetryGrid from './components/TelemetryGrid'; // [PP1] feed status
@@ -590,14 +591,13 @@ GlobalStateReadout.displayName = 'GlobalStateReadout';
 interface TopNavigationProps {
   activeTab: TabId;
   onChange: (id: TabId) => void;
-  onToggleSidebar: () => void;
   // [PP10]
   onOpenAudit: () => void;
   auditCount: number;
 }
 
 const TopNavigation: React.FC<TopNavigationProps> = memo(
-  ({ activeTab, onChange, onToggleSidebar, onOpenAudit, auditCount }) => {
+  ({ activeTab, onChange, onOpenAudit, auditCount }) => {
     const activeConfig = TABS_BY_ID.get(activeTab);
 
     return (
@@ -605,13 +605,6 @@ const TopNavigation: React.FC<TopNavigationProps> = memo(
         <div className="px-4 lg:px-6 py-3">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-3 shrink-0">
-              <button
-                onClick={onToggleSidebar}
-                className="lg:hidden p-2 rounded-lg hover:bg-slate-800/60 transition-colors"
-                aria-label="Toggle sidebar"
-              >
-                <Menu className="w-5 h-5 text-slate-300" />
-              </button>
               <div className="flex items-center gap-2.5">
                 <div className="p-2 bg-gradient-to-br from-cyan-500/20 to-emerald-500/20 rounded-lg border border-cyan-500/30">
                   <ShieldCheck className="w-5 h-5 text-cyan-400" />
@@ -1022,6 +1015,10 @@ const RealTimeEngineTab: React.FC = memo(() => (
 ));
 RealTimeEngineTab.displayName = 'RealTimeEngineTab';
 
+// ============================================================
+// AI Privacy & Cascade Engine tab
+// [REMOVED] AgenticPolicyPlaceholder — was a "coming soon" block
+// ============================================================
 const AIPrivacyTab: React.FC = memo(() => (
   <div className="space-y-5">
     <GlobalControlDeck />
@@ -1031,32 +1028,9 @@ const AIPrivacyTab: React.FC = memo(() => (
       <PresidioAITerminal />
       <CascadeRiskModel />
     </div>
-    <AgenticPolicyPlaceholder />
   </div>
 ));
 AIPrivacyTab.displayName = 'AIPrivacyTab';
-
-const AgenticPolicyPlaceholder: React.FC = memo(() => (
-  <div className="bg-slate-950 border border-slate-800 rounded-xl p-6 shadow-2xl">
-    <div className="flex items-center gap-3 mb-4">
-      <div className="p-2 bg-amber-500/10 rounded-lg border border-amber-500/20">
-        <ShieldCheck className="w-5 h-5 text-amber-400" />
-      </div>
-      <div>
-        <h2 className="text-lg font-semibold text-white">Agentic Policy Matrix</h2>
-        <p className="text-xs text-slate-400">Autonomous guardrails &amp; permissions</p>
-      </div>
-    </div>
-    <div className="border border-dashed border-slate-700 rounded-lg p-8 text-center">
-      <ShieldCheck className="w-8 h-8 text-slate-600 mx-auto mb-2" />
-      <p className="text-sm text-slate-400">AgenticPolicyMatrix component</p>
-      <p className="text-xs text-slate-600 mt-1">
-        Import from ./components/AgenticPolicyMatrix
-      </p>
-    </div>
-  </div>
-));
-AgenticPolicyPlaceholder.displayName = 'AgenticPolicyPlaceholder';
 
 // ============================================================
 // Shell
@@ -1074,8 +1048,6 @@ const TAB_VIEWS: Record<TabId, React.ComponentType> = {
 const AppShell: React.FC = () => {
   // [PP9] default landing tab is now 'executive'
   const [activeTab, setActiveTab] = useState<TabId>('executive');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidebarItem, setSidebarItem] = useState('overview');
 
   // ============================================================
   // [PP10] Audit persistence + modal state
@@ -1140,37 +1112,17 @@ const AppShell: React.FC = () => {
 
   const handleTabChange = useCallback((id: TabId) => {
     setActiveTab(id);
-    setSidebarOpen(false);
   }, []);
-
-  const handleSidebarNavigate = useCallback((item: string) => {
-    setSidebarItem(item);
-    setSidebarOpen(false);
-  }, []);
-
-  const toggleSidebar = useCallback(() => setSidebarOpen((v) => !v), []);
-  const closeSidebar = useCallback(() => setSidebarOpen(false), []);
 
   const activeConfig = TABS_BY_ID.get(activeTab);
   const TabView = TAB_VIEWS[activeTab];
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
-      <Sidebar activeItem={sidebarItem} onNavigate={handleSidebarNavigate} />
-
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-20 lg:hidden"
-          onClick={closeSidebar}
-          aria-hidden="true"
-        />
-      )}
-
-      <div className="lg:pl-64 min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col">
         <TopNavigation
           activeTab={activeTab}
           onChange={handleTabChange}
-          onToggleSidebar={toggleSidebar}
           onOpenAudit={handleOpenAudit}
           auditCount={auditLog.length}
         />
@@ -1218,10 +1170,21 @@ const AppShell: React.FC = () => {
   );
 };
 
-const App: React.FC = () => (
-  <GlobalStateProvider>
-    <AppShell />
-  </GlobalStateProvider>
-);
+// ============================================================
+// [LANDING] Root — toggles between the landing page and the dashboard
+// ============================================================
+const App: React.FC = () => {
+  const [view, setView] = useState<'landing' | 'dashboard'>('landing');
+
+  if (view === 'landing') {
+    return <LandingPage onEnter={() => setView('dashboard')} />;
+  }
+
+  return (
+    <GlobalStateProvider>
+      <AppShell />
+    </GlobalStateProvider>
+  );
+};
 
 export default App;
