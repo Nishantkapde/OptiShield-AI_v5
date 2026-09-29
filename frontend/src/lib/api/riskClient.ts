@@ -1,7 +1,7 @@
 // frontend/src/lib/api/riskClient.ts
 // Typed client for Pain Point 1 — Deterministic Quantitative Risk Engine.
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://optishield-ai-v5.onrender.com';
 
 // ============================================================
 // Single-asset assessment (existing)
