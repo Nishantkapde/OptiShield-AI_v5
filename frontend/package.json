@@ -16,14 +16,15 @@
     "start:backend:tsx": "tsx backend/src/server.ts",
     "typecheck:backend": "tsc --noEmit -p backend/tsconfig.json"
   },
-  "dependencies": {
-    "@supabase/supabase-js": "^2.57.4",
-    "framer-motion": "^13.2.0",
-    "lucide-react": "^0.446.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "recharts": "^3.10.1"
-  },
+"dependencies": {
+  "zod": "^3.22.4",
+  "@supabase/supabase-js": "^2.57.4",
+  "framer-motion": "^13.2.0",
+  "lucide-react": "^0.446.0",
+  "react": "^18.3.1",
+  "react-dom": "^18.3.1",
+  "recharts": "^3.10.1"
+},
   "devDependencies": {
     "@eslint/js": "^9.9.1",
     "@types/react": "^18.3.5",
