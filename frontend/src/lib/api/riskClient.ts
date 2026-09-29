@@ -1,6 +1,8 @@
 // frontend/src/lib/api/riskClient.ts
 // Typed client for Pain Point 1 — Deterministic Quantitative Risk Engine.
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+
 // ============================================================
 // Single-asset assessment (existing)
 // ============================================================
@@ -51,7 +53,7 @@ export async function assessAssetRisk(
   input: AssetRiskInput,
   signal?: AbortSignal
 ): Promise<RiskAssessmentResult> {
-  const res = await fetch('/api/risk/assess', {
+  const res = await fetch(`${BASE_URL}/api/risk/assess`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(input),
@@ -113,7 +115,7 @@ interface ListEnvelope {
  * Server supports `?now=<ISO>` for deterministic testing if needed later.
  */
 export async function listAssets(signal?: AbortSignal): Promise<AssetListResult> {
-  const res = await fetch('/api/risk/assets', { signal });
+  const res = await fetch(`${BASE_URL}/api/risk/assets`, { signal });
   if (!res.ok) {
     throw new Error(`Asset list failed: ${res.status}`);
   }
